@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgis/postgis:14-3.2
+    environment:
+      POSTGRES_DB: ridewave
+      POSTGRES_USER: ridewave
+      POSTGRES_PASSWORD: ridewave_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infrastructure/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  api:
+    build:
+      context: ./api
+      dockerfile: ../infrastructure/Dockerfile.api
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://ridewave:ridewave_dev_password@postgres:5432/ridewave
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: dev-jwt-secret
+      NODE_ENV: development
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ./api/src:/usr/src/app/src
+
+volumes:
+  postgres_data:
+  redis_data:
