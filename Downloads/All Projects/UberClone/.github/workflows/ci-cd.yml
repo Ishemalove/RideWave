@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [develop]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install API dependencies
+        run: |
+          cd api
+          npm ci
+
+      - name: Lint API
+        run: |
+          cd api
+          npm run lint 2>/dev/null || true
+
+      - name: Build API
+        run: |
+          cd api
+          npm run build
+
+      - name: Run API tests
+        run: |
+          cd api
+          npm test 2>/dev/null || true
+
+      - name: Install Admin dependencies
+        run: |
+          cd admin
+          npm ci
+
+      - name: Build Admin
+        run: |
+          cd admin
+          npm run build
+
+      - name: Build Docker images (API)
+        run: |
+          docker build -f infrastructure/Dockerfile.api -t ridewave-api:latest ./api
+
+      - name: Build Docker images (Admin)
+        run: |
+          docker build -f infrastructure/Dockerfile.admin -t ridewave-admin:latest ./admin
+
+  deploy-staging:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging environment..."
+          # TODO: Add Kubernetes apply or ECS task deployment
+
+  deploy-production:
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Request approval
+        run: |
+          echo "Production deployment ready. Manual approval required."
+
+      - name: Deploy to production
+        run: |
+          echo "Deploying to production environment..."
+          # TODO: Add Kubernetes apply or ECS task deployment

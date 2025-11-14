@@ -1,0 +1,109 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+npm-debug.log
+npm-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+.nuxt/
+coverage/
+
+# IDE & Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.vscode-test/
+.history/
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+secrets/
+
+# OS
+.DS_Store
+Thumbs.db
+.AppleDouble
+.LSOverride
+._*
+
+# Flutter
+/mobile/build/
+/mobile/.dart_tool/
+/mobile/.flutter-plugins
+/mobile/.flutter-plugins-dependencies
+/mobile/.packages
+/mobile/ios/Flutter/Flutter.podspec
+/mobile/ios/Flutter/Flutter.framework
+/mobile/ios/Flutter/Flutter.xcframework
+/mobile/ios/Flutter/flutterfire_cli_output.gradle
+/mobile/ios/ServiceAccountKey.json
+/mobile/android/.gradle/
+/mobile/android/local.properties
+/mobile/android/gradle.properties.bak
+/mobile/build-version.json
+/mobile/.metadata
+/mobile/pubspec.lock
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+/data/
+
+# Testing
+.coverage/
+coverage/
+*.lcov
+.nyc_output/
+
+# Logs
+logs/
+*.log
+lerna-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Kubernetes
+*.yaml.bak
+
+# Infrastructure
+/infrastructure/terraform/.terraform/
+/infrastructure/terraform/.terraform.lock.hcl
+/infrastructure/terraform/terraform.tfstate
+/infrastructure/terraform/terraform.tfstate.backup
+/infrastructure/terraform/*.tfvars
+
+# System
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db

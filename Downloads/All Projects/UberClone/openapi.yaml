@@ -1,0 +1,357 @@
+openapi: 3.0.0
+info:
+  title: RideWave API
+  version: 0.1.0
+  description: On-demand ride-hailing platform API
+servers:
+  - url: http://localhost:3000
+    description: Development
+  - url: https://api.ridewave.com
+    description: Production
+
+paths:
+  /api/v1/auth/signup:
+    post:
+      summary: User registration
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                  description: Must include country code (+1234567890)
+                password:
+                  type: string
+                  minLength: 8
+      responses:
+        200:
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+
+  /api/v1/auth/login:
+    post:
+      summary: User login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phoneOrEmail:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        401:
+          description: Invalid credentials
+
+  /api/v1/auth/otp/send:
+    post:
+      summary: Send OTP via SMS
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+      responses:
+        200:
+          description: OTP sent
+
+  /api/v1/auth/otp/verify:
+    post:
+      summary: Verify OTP and login
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                code:
+                  type: string
+                  pattern: '^\d{6}$'
+      responses:
+        200:
+          description: OTP verified, user logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+
+  /api/v1/trips/estimate:
+    post:
+      summary: Get fare estimate
+      tags:
+        - Trips
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pickupLat:
+                  type: number
+                pickupLng:
+                  type: number
+                dropoffLat:
+                  type: number
+                dropoffLng:
+                  type: number
+                vehicleType:
+                  type: string
+                  enum: [economy, xl, premium]
+      responses:
+        200:
+          description: Fare estimate
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  distance:
+                    type: number
+                  fare:
+                    type: number
+                  eta:
+                    type: integer
+                    description: ETA in minutes
+
+  /api/v1/trips:
+    post:
+      summary: Create a new trip
+      tags:
+        - Trips
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                pickupLat:
+                  type: number
+                pickupLng:
+                  type: number
+                dropoffLat:
+                  type: number
+                dropoffLng:
+                  type: number
+                vehicleType:
+                  type: string
+                  enum: [economy, xl, premium]
+                paymentMethodId:
+                  type: string
+                promoCode:
+                  type: string
+      responses:
+        200:
+          description: Trip created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tripId:
+                    type: string
+                  status:
+                    type: string
+                  fareEstimate:
+                    type: number
+
+  /api/v1/trips/{id}:
+    get:
+      summary: Get trip details
+      tags:
+        - Trips
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Trip details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                  pickupPoint:
+                    type: object
+                  dropoffPoint:
+                    type: object
+                  driverId:
+                    type: string
+
+  /api/v1/trips/{id}/cancel:
+    post:
+      summary: Cancel a trip
+      tags:
+        - Trips
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Trip cancelled
+
+  /api/v1/drivers/availability:
+    post:
+      summary: Toggle driver online/offline
+      tags:
+        - Drivers
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                isOnline:
+                  type: boolean
+      responses:
+        200:
+          description: Availability toggled
+
+  /api/v1/drivers/location:
+    post:
+      summary: Update driver location
+      tags:
+        - Drivers
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lng:
+                  type: number
+      responses:
+        200:
+          description: Location updated
+
+  /api/v1/payments/intents:
+    post:
+      summary: Create payment intent
+      tags:
+        - Payments
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                tripId:
+                  type: string
+      responses:
+        200:
+          description: Payment intent created
+
+  /api/v1/admin/users:
+    get:
+      summary: List users (admin only)
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: List of users
+
+  /api/v1/admin/analytics/daily:
+    get:
+      summary: Get daily analytics
+      tags:
+        - Admin
+      security:
+        - BearerAuth: []
+      responses:
+        200:
+          description: Daily analytics
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

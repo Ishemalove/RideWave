@@ -1,0 +1,152 @@
+{
+  "info": {
+    "name": "RideWave API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Sign Up",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/auth/signup",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "auth", "signup"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"John Doe\", \"email\": \"john@example.com\", \"phone\": \"+1234567890\", \"password\": \"SecurePass123\"}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "auth", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"phoneOrEmail\": \"john@example.com\", \"password\": \"SecurePass123\"}"
+            }
+          }
+        },
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/auth/otp/send",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "auth", "otp", "send"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"phone\": \"+1234567890\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trips",
+      "item": [
+        {
+          "name": "Estimate Fare",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/trips/estimate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "trips", "estimate"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"pickupLat\": 37.7749, \"pickupLng\": -122.4194, \"dropoffLat\": 37.8044, \"dropoffLng\": -122.2712, \"vehicleType\": \"economy\"}"
+            }
+          }
+        },
+        {
+          "name": "Create Trip",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/trips",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "trips"]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <access_token>"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"pickupLat\": 37.7749, \"pickupLng\": -122.4194, \"dropoffLat\": 37.8044, \"dropoffLng\": -122.2712, \"vehicleType\": \"economy\"}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/admin/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "admin", "users"]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <access_token>"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Daily Analytics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:3000/api/v1/admin/analytics/daily",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["api", "v1", "admin", "analytics", "daily"]
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <access_token>"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
