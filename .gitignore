@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.nuxt/
+dist/
+build/
+*.local
+.env.local
+.env.*.local
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+coverage/
+.nyc_output/
