@@ -48,8 +48,4 @@ npm install
 npm run dev
 ```
 
-Next steps:
-- Implement auth, trips, driver matching, payments integration.
-- Add Terraform and CI/CD pipelines in `/infrastructure`.
 
-See individual READMEs for per-project details.
