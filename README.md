@@ -12,7 +12,7 @@ Tech choices (decided):
 - Storage: AWS S3
 
 Repository layout
-```
+```                               
 /
   /mobile         # Flutter app (rider & driver)
   /api            # Backend services (NestJS)
